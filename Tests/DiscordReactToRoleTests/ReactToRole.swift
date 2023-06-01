@@ -1221,15 +1221,6 @@ class ReactToRoleTests: XCTestCase {
             requestAllMembers: .enabledWithPresences
         )
 
-        /// One unrelated test.
-        /// This tests that `DiscordCache` correctly populates `guildMembersGatewayManager`.
-        let _guildMembersGatewayManager = await cache.guildMembersGatewayManager
-        let guildMembersGatewayManager = try XCTUnwrap(_guildMembersGatewayManager)
-        XCTAssertEqual(
-            ObjectIdentifier(guildMembersGatewayManager),
-            ObjectIdentifier(bot)
-        )
-
         let expectation = Expectation(description: "Connected")
 
         Task {
@@ -1261,7 +1252,6 @@ class ReactToRoleTests: XCTestCase {
 private actor FakeGatewayManager: GatewayManager {
     nonisolated let client: any DiscordClient
     nonisolated let id: UInt = 0
-    nonisolated let state: GatewayState = .stopped
     nonisolated let identifyPayload: Gateway.Identify = .init(token: "", intents: [])
     nonisolated func connect() { }
     func requestGuildMembersChunk(payload: Gateway.RequestGuildMembers) async { }

@@ -7,7 +7,32 @@ on:
   push: { branches: [ main ] }
 
 jobs:
-  tests:
+  linux-build:
+    runs-on: ubuntu-latest
+    container: swift:5.7-focal
+    steps:
+      - name: Check out package
+        uses: actions/checkout@v3
+      - name: Build package
+        run: swift build
+  macos-build:
+    strategy:
+      fail-fast: false
+      matrix:
+        xcode:
+          - latest-stable
+          - latest
+    runs-on: macos-13
+    steps:
+      - name: Select latest available Xcode
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: ${{ matrix.xcode }}
+      - name: Check out package
+        uses: actions/checkout@v3
+      - name: Build package
+        run: swift build
+  integration-tests:
     if: ${{ github.event_name == 'push' || (github.event.pull_request.base.repo.id == github.event.pull_request.head.repo.id && !github.event.pull_request.draft) }}
     env:
       BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
