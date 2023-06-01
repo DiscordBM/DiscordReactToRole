@@ -8,8 +8,16 @@ on:
 
 jobs:
   linux-build:
+    strategy:
+      fail-fast: false
+      matrix:
+        container:
+          - swift:5.7-focal
+          - swift:5.8-jammy 
+          - swiftlang/swift:nightly-5.9-jammy
+          - swiftlang/swift:nightly-main-jammy
+    container: ${{ matrix.container }}
     runs-on: ubuntu-latest
-    container: swift:5.7-focal
     steps:
       - name: Check out package
         uses: actions/checkout@v3
